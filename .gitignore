@@ -46,5 +46,7 @@ vecomm
 settings.ini
 .env
 
-*/test.py
+*/tests.py
 */*/tests.py
+*/test.py
+*/*/test.py
