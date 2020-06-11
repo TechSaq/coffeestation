@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>
+        {% block page_title %}
+            Coffee Station
+        {% endblock page_title %}
+    </title>
+
+    {% include "forall/_link_files.html" %} 
+
+    {% block pageSpecificCSS %} 
+    {% endblock pageSpecificCSS %}
+
+</head>
+
+<body>
+
+    {% include 'forall/_nav_header.html' %} 
+    
+    {% block content %} 
+    {% endblock content %} 
+    
+    {% include 'forall/_footer.html' %} 
+    
+    {% include 'forall/_loader_snippet.html' %} 
+    
+    {% include 'forall/_script_files.html' %} 
+
+    {% block pageSpecificJS %} 
+    {% endblock pageSpecificJS %}
+
+</body>
+
+</html>
