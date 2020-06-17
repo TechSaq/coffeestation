@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView
 
 # Create your views here.
 
 
-def core(request):
-    return render(request, 'index.html')
+class HomeView(TemplateView):
+    template_name = "index.html"
 
-def contact(request):
-    return render(request, 'contact.html')
+class ContactView(TemplateView):
+    template_name = "contact.html"
+
