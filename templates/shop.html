@@ -55,7 +55,7 @@
                                                 <h3><a href="product-single.html">{{ item.title }}</a></h3>
                                                 <p>{{ item.description }}</p>
                                                 <p class="price"><span>{{ item.price }}</span></p>
-                                                <p><a href="{% url 'shop:cart' %}" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
+                                                <p><a href="{{ item.get_add_to_cart_url }}" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
                                             </div>
                                         </div>
                                     </div>
