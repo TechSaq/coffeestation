@@ -1,6 +1,15 @@
 {% extends 'forall/base.html' %}
 {% load static %}
 
+{% block pageSpecificCSS %}
+<style>
+.input-group > .form-control {
+    flex-grow: 0;
+    width: 50px;
+}
+</style>
+{% endblock pageSpecificCSS %}
+
 {% block content %}
 <section class="home-slider owl-carousel">
 
@@ -35,53 +44,34 @@
                             </tr>
                         </thead>
                         <tbody>
+                        {% for cart in cart_items.items.all %}
+                        <h1>{{ cart }}</h1>
                             <tr class="text-center">
-                                <td class="product-remove"><a href="#"><span class="icon-close"></span></a></td>
+                                <td class="product-remove"><a href={% url 'shop:remove-from-cart' cart.item.slug %}><span class="icon-close"></span></a></td>
 
                                 <td class="image-prod">
                                     <div class="img" style="background-image:url({% static 'images/menu-2.jpg' %});"></div>
                                 </td>
 
                                 <td class="product-name">
-                                    <h3>Creamy Latte Coffee</h3>
-                                    <p> Far far away, behind the word mountains, far from the countries</p>
+                                    <h3>{{ cart.item.title }}</h3>
+                                    <p> {{ cart.item.description }}</p>
                                 </td>
 
-                                <td class="price">$4.90</td>
+                                <td class="price">{{ cart.item.price }}</td>
 
                                 <td class="quantity">
-                                    <div class="input-group mb-3">
-                                        <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
+                                    <div class="input-group mb-3 d-flex justify-content-center align-items-center">
+                                        <a href={% url 'shop:remove-one-from-cart' cart.item.slug %}><span class="icon-minus"></span></i></a>
+                                        <input type="text" name="quantity" class="quantity form-control input-number mx-2" value={{ cart.quantity }} min="1" max="100">
+                                        <a href={% url 'shop:add-to-cart' cart.item.slug %}><span class="icon-plus"></span></i></a>
                                     </div>
                                 </td>
 
-                                <td class="total">$4.90</td>
+                                <td class="total">{{ cart.get_total_item_price }}</td>
                             </tr>
-                            <!-- END TR-->
-
-                            <tr class="text-center">
-                                <td class="product-remove"><a href="#"><span class="icon-close"><span></a></td>
-
-                                <td class="image-prod">
-                                    <div class="img" style="background-image:url({% static 'images/dish-2.jpg' %});"></div>
-                                </td>
-
-                                <td class="product-name">
-                                    <h3>Grilled Ribs Beef</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries</p>
-                                </td>
-
-                                <td class="price">$15.70</td>
-
-                                <td class="quantity">
-                                    <div class="input-group mb-3">
-                                        <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-                                    </div>
-                                </td>
-
-                                <td class="total">$15.70</td>
-                                </tr>
-                                <!-- END TR-->
+                        {% endfor %}
+                        
                         </tbody>
                     </table>
                 </div>
@@ -93,20 +83,20 @@
                     <h3>Cart Totals</h3>
                     <p cl ass="d-flex">
                         <span>Subtotal</span>
-                        <span>$20.60</span>
+                        <span>${{ order.get_cart_total }}</span>
                     </p>
                     <p class="d-flex">
-                        <span>        Delivery</span>
-                        <span>  $0.00</span>
+                        <span>Delivery</span>
+                        <span>$0.00</span>
                     </p>
                     <p class="d-flex">
                         <span>Discount</span>
-                        <span>$3.00</span>
+                        <span>$0.00</span>
                     </p>
                     <hr>
                     <p class="d-flex total-price">
                         <span>Total</span>
-                        <span>$17.60</span>
+                        <span>${{ cart_items.get_cart_total }}</span>
                     </p>
                 </div>
                 <p class="text-center"><a href={% url 'shop:checkout' %} class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
@@ -128,11 +118,11 @@
                 <div class="col-md-3">
                     <div class="menu-entry">
                         <a href="#" class="img" style="background-image: url({% static 'images/menu-1.jpg' %});"></a>
-                        <div clas s="text text-center pt-4">
+                        <div class="text text-center pt-4">
                             <h3><a hre f="#">Coffee Capuccino</a></h3>
                             <p>A small river named Duden flows by their place and supplies</p>
                             <p class="price"><span>$5.90</span></p>
-                            <p><a hr ef="#" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
+                            <p><a href="#" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
                         </div>
                     </div>
                 </div>
@@ -152,7 +142,7 @@
                         <a h ref="#" class="img" style="background-image: url({% static 'images/menu-3.jpg' %});"></a>
                         <div class="text text-center pt-4">
                             <h3> <a href="#">Coffee Capuccino</a></h3>
-                            <p>A s mall river named Duden flows by their place and supplies</p>
+                            <p>A small river named Duden flows by their place and supplies</p>
                             <p class="price"><span>$5.90</span></p>
                             <p><a href="#" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
                         </div>

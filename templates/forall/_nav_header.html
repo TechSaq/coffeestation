@@ -1,3 +1,4 @@
+{% load cart_template_tags %}
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
         <a class="navbar-brand" href={% url 'home' %}>Coffee<small>Station</small></a>
@@ -20,7 +21,7 @@
                 {% if user.is_authenticated %}
                 <li class="nav-item cart"><a href={% url 'shop:cart' %} class="nav-link"><span
                             class="icon icon-shopping_cart"></span><span
-                            class="bag d-flex justify-content-center align-items-center"><small>1</small></span></a>
+                            class="bag d-flex justify-content-center align-items-center"><small>{{ user | cart_items_count}}</small></span></a>
                 </li>
                 
                 <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link">Sign Out</a></li>

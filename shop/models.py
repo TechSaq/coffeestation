@@ -48,9 +48,9 @@ class Item(models.Model):
         return reverse("shop:add-to-cart",
                        kwargs={"slug": self.slug})
 
-    # def get_remove_from_cart_url(self):
-    #     return reverse("core:remove-from-cart",
-    #                    kwargs={"slug": self.slug})
+    def get_remove_one_from_cart_url(self):
+        return reverse("shop:remove-one-from-cart",
+                       kwargs={"slug": self.slug})
 
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -60,10 +60,10 @@ class OrderItem(models.Model):
     is_ordered = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        return self.item.title + "  " + self.user.username
     
     def get_total_item_price(self):
-        return self.item * self.quantity
+        return self.item.price * self.quantity
 
 
 class Order(models.Model):

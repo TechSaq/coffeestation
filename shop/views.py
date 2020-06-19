@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, ListView
-
 from django.utils import timezone
-
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
 from .models import Category, Item, OrderItem, Order
 
 
@@ -20,10 +20,12 @@ class ShopView(ListView):
         if category == 'category-cc':
             c = 'CC'
 
-        context = {}
-        context['categories'] = Category.objects.all()
-        context['items'] = Item.objects.filter(category=c)
-        context['category_param'] = category
+        context = {
+            'categories': Category.objects.all(),
+            'items': Item.objects.filter(category=c),
+            'category_param': category
+        }
+        
         return render(self.request, 'shop.html', context)
     
     
@@ -39,10 +41,17 @@ class ProductSingleView(ListView):
         return render(self.request, 'product-single.html', context)
 
 
-class CartView(LoginRequiredMixin, TemplateView):
-    template_name = "cart.html"
+class CartView(LoginRequiredMixin, ListView):
 
+   def get(self, *args, **kwargs):
+       cart_items = Order.objects.filter(user=self.request.user)
+       context = {
+           'cart_items': cart_items[0]
+       }
+      
+       return render(self.request, 'cart.html', context)
 
+@login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_item, created = OrderItem.objects.get_or_create(
@@ -52,10 +61,18 @@ def add_to_cart(request, slug):
     )
 
     order_qs = Order.objects.filter(user=request.user, is_ordered=False)
-    print(order_qs)
+   
     if order_qs.exists():
-        print(order_qs)
-        return redirect("shop:cart")
+        order = order_qs[0]
+
+        if order.items.filter(user=request.user, is_ordered=False):
+            order_item.quantity += 1
+            order_item.save()
+            order.items.add(order_item)
+            return redirect("shop:cart")
+        else:
+            order.items.add(order_item)
+            return redirect("shop:cart")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
@@ -65,10 +82,63 @@ def add_to_cart(request, slug):
         order.items.add(order_item)
         return redirect("shop:cart")
 
-
     return redirect("shop:cart")
     
+@login_required
+def remove_from_cart(request, slug):
+    item = get_object_or_404(Item, slug=slug)
 
-class CheckoutView(TemplateView):
-    template_name = "checkout.html"
+    order_qs = Order.objects.filter(user=request.user, is_ordered=False)
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+        if order.items.filter(user=request.user, is_ordered=False):
+            order_item = OrderItem.objects.filter(
+                item=item,
+                is_ordered=False,
+                user=request.user
+            )[0]
+
+            order_item.quantity = 1
+            order_item.save()
+            order.items.remove(order_item)
+            return redirect("shop:cart")
+        return redirect("shop:cart")
+    return redirect("shop:cart")
+
+
+
+@login_required
+def remove_one_from_cart(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+
+    order_qs = Order.objects.filter(user=request.user, is_ordered=False)
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+        if order.items.filter(item__slug=item.slug).exists():
+            order_item = OrderItem.objects.filter(
+                item=item,
+                is_ordered=False,
+                user=request.user
+            )[0]
+            
+            if order_item.quantity > 1:
+                order_item.quantity -= 1
+                order_item.save()
+            else:
+                order.items.remove(order_item)
+
+        return redirect("shop:cart")
+    return redirect("shop:cart")
+
+class CheckoutView(LoginRequiredMixin, ListView):
+    def get(self, *args, **kwargs):
+        order = Order.objects.filter(user=self.request.user, is_ordered=False)[0]
+        context ={
+            'order': order
+        }
+        return render(self.request, "checkout.html", context)
 
