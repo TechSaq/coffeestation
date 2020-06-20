@@ -1,5 +1,6 @@
 {% load cart_template_tags %}
-<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar" style="background-image: url({% static 'images/bg_4.jpg' %});">
     <div class="container">
         <a class="navbar-brand" href={% url 'home' %}>Coffee<small>Station</small></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">

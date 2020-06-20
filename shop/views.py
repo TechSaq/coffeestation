@@ -27,7 +27,6 @@ class ShopView(ListView):
             'items': Item.objects.filter(category=c),
             'category_param': category
         }
-        
         return render(self.request, 'shop.html', context)
     
     
@@ -71,8 +70,10 @@ def add_to_cart(request, slug):
             order_item.quantity += 1
             order_item.save()
             order.items.add(order_item)
+            messages.info(request, "This item has been updated!")
             return redirect("shop:cart")
         else:
+            messages.info(request, "This item has been added to cart!")
             order.items.add(order_item)
             return redirect("shop:cart")
     else:
@@ -81,10 +82,9 @@ def add_to_cart(request, slug):
             user=request.user,
             ordered_date=ordered_date,
         )
+        messages.info(request, "This item has been added to cart!")
         order.items.add(order_item)
         return redirect("shop:cart")
-
-    return redirect("shop:cart")
     
 @login_required
 def remove_from_cart(request, slug):
@@ -104,10 +104,15 @@ def remove_from_cart(request, slug):
 
             order_item.quantity = 1
             order_item.save()
+            messages.info(request, "This item has been removed from your cart!")
             order.items.remove(order_item)
             return redirect("shop:cart")
-        return redirect("shop:cart")
-    return redirect("shop:cart")
+        else:
+            messages.info(request, "This item is not in your cart!")
+            return redirect("shop:cart")
+    else:
+        message(request, "You don't have any order yet!")
+        return redirect("shop:shop",  category="category-cmt")
 
 
 
@@ -130,11 +135,20 @@ def remove_one_from_cart(request, slug):
             if order_item.quantity > 1:
                 order_item.quantity -= 1
                 order_item.save()
+                messages.info(request, "This item has been updated!")
+                return redirect("shop:cart")
             else:
+                messages.info(request, "This item has been removed from your cart!")
+                order_item.quantity -= 1
+                order_item.save()
                 order.items.remove(order_item)
-
-        return redirect("shop:cart")
-    return redirect("shop:cart")
+                return redirect("shop:shop", category="category-cmt")
+        else:
+            messages.info(request, "This item is not in your cart!")
+            return redirect("shop:cart")
+    else:
+        messages.info(request, "You don't have any order yet!")
+        return redirect("shop:shop", category="category-cmt")
 
 class CheckoutView(LoginRequiredMixin, ListView):
     def get(self, *args, **kwargs):
@@ -142,14 +156,10 @@ class CheckoutView(LoginRequiredMixin, ListView):
 
         form = CheckoutForm()
 
-
         context = {
             'order': order,
             'form': form
         }
-
-        print(form)
-
         return render(self.request, "checkout.html", context)
     
     def post(self, *args, **kwargs):
@@ -167,4 +177,17 @@ class CheckoutView(LoginRequiredMixin, ListView):
             zipcode = form.cleaned_data.get('zipcode')
             country = form.cleaned_data.get('country')
             payment_choice = form.cleaned_data.get('payment_choice')
+
+            print("-------------------")
+            print(first_name)
+            print(last_name)
+            print(phone)
+            print(email)
+            print(street_name)
+            print(apartment)
+            print(city)
+            print(zipcode)
+            print(country)
+            print(payment_choice)
+            print("-------------------")
 
