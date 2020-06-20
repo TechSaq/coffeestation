@@ -19,9 +19,13 @@
                 </li>
                 <li class="nav-item"><a href={% url 'contact' %} class="nav-link">Contact</a></li>
                 {% if user.is_authenticated %}
-                <li class="nav-item cart"><a href={% url 'shop:cart' %} class="nav-link"><span
-                            class="icon icon-shopping_cart"></span><span
-                            class="bag d-flex justify-content-center align-items-center"><small>{{ user | cart_items_count}}</small></span></a>
+                <li class="nav-item cart">
+                    <a href={% url 'shop:cart' %} class="nav-link">
+                        <span class="icon icon-shopping_cart"></span>
+                        <span class="bag d-flex justify-content-center align-items-center">
+                            <small>{{ user | cart_items_count}}</small>
+                        </span>
+                    </a>
                 </li>
                 
                 <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link">Sign Out</a></li>

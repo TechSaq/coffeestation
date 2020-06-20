@@ -13,76 +13,86 @@
                     <div class="row align-items-end">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="firstname">Firt Name</label>
-                                <input type="text" class="form-control" placeholder="">
+                                <label for="firstname">First Name</label>
+                                {% comment %} <input type="text" class="form-control" placeholder=""> {% endcomment %}
+                                {{ form.first_name }}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="lastname">Last Name</label>
-                                <input type="text" class="form-control" placeholder="">
-                            </div>
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="country">State / Country</label>
-                                <div class="select-wrap">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="" class="form-control">
-		                  	<option value="">France</option>
-		                    <option value="">Italy</option>
-		                    <option value="">Philippines</option>
-		                    <option value="">South Korea</option>
-		                    <option value="">Hongkong</option>
-		                    <option value="">Japan</option>
-		                  </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="streetaddress">Street Address</label>
-                                <input type="text" class="form-control" placeholder="House number and street name">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
-                            </div>
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="towncity">Town / City</label>
-                                <input type="text" class="form-control" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="postcodezip">Postcode / ZIP *</label>
-                                <input type="text" class="form-control" placeholder="">
+                                {{ form.last_name }}
+                                {% comment %} <input type="text" class="form-control" placeholder=""> {% endcomment %}
                             </div>
                         </div>
                         <div class="w-100"></div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phone">Phone</label>
-                                <input type="text" class="form-control" placeholder="">
+                                {{ form.phone }}
+                                {% comment %} <input type="text" class="form-control" placeholder=""> {% endcomment %}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="emailaddress">Email Address</label>
-                                <input type="text" class="form-control" placeholder="">
+                                {{ form.email }}
+                                {% comment %} <input type="text" class="form-control" placeholder=""> {% endcomment %}
+                            </div>
+                        </div>
+                        
+                        <div class="w-100"></div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="streetaddress">Street Address</label>
+                                {{ form.street_name }}
+                                {% comment %} <input type="text" class="form-control" placeholder="House number and street name"> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.apartment }}
+                                {% comment %} <input type="text" class="form-control" placeholder="Appartment, suite, unit etc: (optional)"> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="towncity">Town / City</label>
+                                {{ form.city }}
+                                {% comment %} <input type="text" class="form-control" placeholder=""> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="postcodezip">Postcode / ZIP *</label>
+                                {{ form.zipcode }}
+                                {% comment %} <input type="text" class="form-control" placeholder=""> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="country">State / Country</label>
+                                {{ form.country }}
+                                {% comment %} <div class="select-wrap">
+                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                    <select name="" id="" class="form-control">
+                                        <option value="">France</option>
+                                        <option value="">Italy</option>
+                                        <option value="">Philippines</option>
+                                        <option value="">South Korea</option>
+                                        <option value="">Hongkong</option>
+                                        <option value="">Japan</option>
+		                            </select>
+                                </div> {% endcomment %}
                             </div>
                         </div>
                         <div class="w-100"></div>
                         <div class="col-md-12">
                             <div class="form-group mt-4">
                                 <div class="radio">
-                                    <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
+                                    {% comment %} <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label> {% endcomment %}
                                     <label><input type="radio" name="optradio"> Ship to different address</label>
                                 </div>
                             </div>
@@ -119,7 +129,7 @@
                     <div class="col-md-6">
                         <div class="cart-detail ftco-bg-dark p-3 p-md-4">
                             <h3 class="billing-heading mb-4">Payment Method</h3>
-                            <div class="form-group">
+                            {% comment %} <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="radio">
                                         <label><input type="radio" name="optradio" class="mr-2"> Direct Bank Tranfer</label>
@@ -139,7 +149,13 @@
                                         <label><input type="radio" name="optradio" class="mr-2"> Paypal</label>
                                     </div>
                                 </div>
+                            </div> {% endcomment %}
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    {{ form.payment_choice }}
+                                </div>
                             </div>
+                            
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="checkbox">

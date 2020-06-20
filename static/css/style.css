@@ -12641,3 +12641,12 @@ textarea.form-control {
         stroke-dashoffset: -136px;
     }
 }
+
+#id_payment_choice>li {
+    list-style: none;
+    padding: 0;
+}
+
+#id_payment_choice>li {
+    list-style: none;
+}

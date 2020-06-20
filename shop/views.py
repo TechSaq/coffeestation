@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, ListView
 from django.utils import timezone
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
 from .models import Category, Item, OrderItem, Order
+from .forms import CheckoutForm
 
 
 class ShopView(ListView):
@@ -137,8 +139,32 @@ def remove_one_from_cart(request, slug):
 class CheckoutView(LoginRequiredMixin, ListView):
     def get(self, *args, **kwargs):
         order = Order.objects.filter(user=self.request.user, is_ordered=False)[0]
-        context ={
-            'order': order
+
+        form = CheckoutForm()
+
+
+        context = {
+            'order': order,
+            'form': form
         }
+
+        print(form)
+
         return render(self.request, "checkout.html", context)
+    
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.Post or None)
+
+        if form.is_valid():
+            #add default address functionality
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get('phone')
+            email = form.cleaned_data.get('email')
+            street_name = form.cleaned_data.get('street_name')
+            apartment = form.cleaned_data.get('apartment')
+            city = form.cleaned_data.get('city')
+            zipcode = form.cleaned_data.get('zipcode')
+            country = form.cleaned_data.get('country')
+            payment_choice = form.cleaned_data.get('payment_choice')
 

@@ -45,7 +45,7 @@
                         </thead>
                         <tbody>
                         {% for cart in cart_items.items.all %}
-                        <h1>{{ cart }}</h1>
+                        {% comment %} <h1>{{ cart }}</h1> {% endcomment %}
                             <tr class="text-center">
                                 <td class="product-remove"><a href={% url 'shop:remove-from-cart' cart.item.slug %}><span class="icon-close"></span></a></td>
 
@@ -81,9 +81,9 @@
             <div class="col col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
                 <div class="cart-total mb-3">
                     <h3>Cart Totals</h3>
-                    <p cl ass="d-flex">
+                    <p class="d-flex">
                         <span>Subtotal</span>
-                        <span>${{ order.get_cart_total }}</span>
+                        <span>${{ cart_items.get_cart_total }}</span>
                     </p>
                     <p class="d-flex">
                         <span>Delivery</span>
