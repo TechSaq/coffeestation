@@ -6,8 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
 from .models import Category, Item, OrderItem, Order
-from .forms import CheckoutForm
+from core.models import Address
 
+from .forms import CheckoutForm
 
 class ShopView(ListView):
     
@@ -155,7 +156,7 @@ class CheckoutView(LoginRequiredMixin, ListView):
         order = Order.objects.filter(user=self.request.user, is_ordered=False)[0]
 
         form = CheckoutForm()
-
+        
         context = {
             'order': order,
             'form': form
@@ -163,31 +164,57 @@ class CheckoutView(LoginRequiredMixin, ListView):
         return render(self.request, "checkout.html", context)
     
     def post(self, *args, **kwargs):
-        form = CheckoutForm(self.request.Post or None)
 
-        if form.is_valid():
-            #add default address functionality
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            phone = form.cleaned_data.get('phone')
-            email = form.cleaned_data.get('email')
-            street_name = form.cleaned_data.get('street_name')
-            apartment = form.cleaned_data.get('apartment')
-            city = form.cleaned_data.get('city')
-            zipcode = form.cleaned_data.get('zipcode')
-            country = form.cleaned_data.get('country')
-            payment_choice = form.cleaned_data.get('payment_choice')
+        form = CheckoutForm(self.request.POST or None)
 
-            print("-------------------")
-            print(first_name)
-            print(last_name)
-            print(phone)
-            print(email)
-            print(street_name)
-            print(apartment)
-            print(city)
-            print(zipcode)
-            print(country)
-            print(payment_choice)
-            print("-------------------")
+        try:
+            order = Order.objects.filter(user=self.request.user, is_ordered=False)
 
+            if form.is_valid():
+                print("inside valid form")
+                use_default = form.cleaned_data.get('use_default')
+                
+                if use_default:
+                    address_qs = Address.objects.filter(user=self.request.user,
+                                                        default=True,
+                                                        address_type='B')
+                    if address_qs.exists():
+                        print("using default address")
+                        address = address_qs[0]
+                        order.billing_addresss = address
+                        order.save()
+                    else:
+                        print('no default address')
+                        messages.info(self.request, "No default address available!")
+                        return redirect("shop:checkout")
+                else:
+                    print('user is entering the address')
+                    street_address = form.cleaned_data.get('street_name')
+                    apartment_address = form.cleaned_data.get('apartment')
+                    country = form.cleaned_data.get('country')
+                    zipcode = form.cleaned_data.get('zipcode')
+                    
+                    address = Address(
+                        user=self.request.user,
+                        street_address=street_address,
+                        apartmet_address=apartment_address,
+                        country=country,
+                        zipcode=zipcode,
+                        address_type='B'
+                    )
+
+                    address.save()
+                    order.billing_address = address
+
+                    set_default = form.cleaned_data.get('set_default')
+                    if set_default:
+                        address.default = True
+                        address.save()
+
+            else:
+                print("not a valid form")
+                messages.info("Please enter valid details!!")
+        except:
+            pass
+
+        return redirect("shop:checkout")

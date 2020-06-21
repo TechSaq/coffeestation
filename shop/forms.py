@@ -42,13 +42,14 @@ class CheckoutForm(forms.Form):
                                 attrs={'class':'form-control'}
                             ))
     country = CountryField(blank_label='--SELECT COUNTRY--').formfield(
-        widget=CountrySelectWidget(
-            attrs={'class':'form-control'}
-        )
-    )
+                            widget=CountrySelectWidget(
+                                attrs={'class':'form-control'}
+                            ))
+    set_default = forms.BooleanField(required=False)
+    use_default = forms.BooleanField(required=False)
 
-    payment_choice = forms.ChoiceField(choices=PAYMENT_CHOICES,
-                                       widget=forms.RadioSelect(
-                                        attrs={'class':'mr-2'}
-                                       )
-                                    )
+    # payment_choice = forms.ChoiceField(choices=PAYMENT_CHOICES,
+    #                                    widget=forms.RadioSelect(
+    #                                     attrs={'class':'mr-2'}
+    #                                    )
+    #                                 )

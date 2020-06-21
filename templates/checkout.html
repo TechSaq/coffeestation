@@ -8,7 +8,8 @@
     <div class="container">
         <div class="row">
             <div class="col-xl-8 ftco-animate">
-                <form action="#" class="billing-form ftco-bg-dark p-3 p-md-5">
+                <form action="#" id="bill-form" class="billing-form ftco-bg-dark p-3 p-md-5" method="POST">
+                {% csrf_token %}
                     <h3 class="mb-4 billing-heading">Billing Details</h3>
                     <div class="row align-items-end">
                         <div class="col-md-6">
@@ -92,11 +93,26 @@
                         <div class="col-md-12">
                             <div class="form-group mt-4">
                                 <div class="radio">
-                                    {% comment %} <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label> {% endcomment %}
-                                    <label><input type="radio" name="optradio"> Ship to different address</label>
+                                    <label class="mr-3">
+                                    {{ form.use_default }}
+                                    {% comment %} <input type="radio" name="optradio">  {% endcomment %}
+                                    Use Default Address </label>
+                                    <label>
+                                    {{ form.set_default }}
+                                    {% comment %} <input type="radio" name="optradio">  {% endcomment %}
+                                    Set this as Default
+                                    </label>
                                 </div>
                             </div>
                         </div>
+                        {% comment %} <div class="col-md-12">
+                            <div class="form-group mt-4">
+                                <div class="radio">
+                                    <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
+                                    <label><input type="radio" name="optradio"> Ship to different address</label>
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
                     </div>
                 </form>
                 <!-- END -->
@@ -128,6 +144,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="cart-detail ftco-bg-dark p-3 p-md-4">
+                        <form action="#" id="payment-form" class="billing-form ftco-bg-dark p-3 p-md-5" method="POST">
+                        {% csrf_token %}
                             <h3 class="billing-heading mb-4">Payment Method</h3>
                             {% comment %} <div class="form-group">
                                 <div class="col-md-12">
@@ -152,7 +170,7 @@
                             </div> {% endcomment %}
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    {{ form.payment_choice }}
+                                    {% comment %} {{ pay_form.payment_choice }} {% endcomment %}
                                 </div>
                             </div>
                             
@@ -163,7 +181,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <p><a href="#" class="btn btn-primary py-3 px-4">Place an order</a></p>
+                            <p><button href={% url 'shop:checkout' %} class="btn btn-primary py-3 px-4" type="submit" form="bill-form">Place an order</button></p>
+                            </form>
                         </div>
                     </div>
                 </div>

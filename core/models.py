@@ -7,14 +7,19 @@ ADDRESS_CHOICES = {
     ('S', 'Shipping')
 }
 
+COUNTRY_CHOICES = {
+    ('IN','INDIA'),
+    ('AU','AUSTRALIA'),
+    ('SA','SAUDI ARABIA')
+}
+
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     street_address = models.CharField(max_length=100)
     apartment_address = models.CharField(max_length=100)
-    # country = CountryField(blank_label='--Select country--', 
-    #                         default="IN")
     zipcode = models.CharField(max_length=100, null=True)
+    country = CountryField()
     address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
     default = models.BooleanField(default=False)
 
