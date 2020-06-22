@@ -8,40 +8,42 @@ class CheckoutForm(forms.Form):
         ('P','Paypal'),
     )
 
-    first_name = forms.CharField(max_length=20,
-                                 widget=forms.TextInput(
-                                     attrs={'class':'form-control'}
+    first_name = forms.CharField(required=False,
+                                max_length=20,
+                                widget=forms.TextInput(
+                                    attrs={'class':'form-control'}
                                  ))
-    last_name = forms.CharField(max_length=20,
+    last_name = forms.CharField(max_length=20, required=False,
                                 widget=forms.TextInput(
                                     attrs={'class': 'form-control'}
                                 ))
-    phone = forms.CharField(max_length=15,
+    phone = forms.CharField(max_length=15, required=False,
                             widget=forms.TextInput(
-                                attrs={'class':'form-control'}
+                                attrs={'class':'form-control',
+                                }
                             ))
     email = forms.EmailField(required=False,
                              widget=forms.EmailInput(
                                 attrs={'class': 'form-control'}
                              ))
-    street_name = forms.CharField(max_length=30,
+    street_name = forms.CharField(max_length=30, required=False,
                                   widget=forms.TextInput(
                                     attrs={'class': 'form-control'}
                                   ))
-    apartment = forms.CharField(max_length=30,
+    apartment = forms.CharField(max_length=30, required=False,
                             widget=forms.TextInput(
                                 attrs={'class': 'form-control'}
                             ))
     city = forms.CharField(max_length=20,
-
+                            required=False,
                            widget=forms.TextInput(
                                attrs={'class': 'form-control'}
                            ))
-    zipcode = forms.CharField(max_length=6,
+    zipcode = forms.CharField(max_length=6, required=False,
                             widget=forms.TextInput(
                                 attrs={'class':'form-control'}
                             ))
-    country = CountryField(blank_label='--SELECT COUNTRY--').formfield(
+    country = CountryField(blank_label='--SELECT COUNTRY--').formfield(required=False,
                             widget=CountrySelectWidget(
                                 attrs={'class':'form-control'}
                             ))

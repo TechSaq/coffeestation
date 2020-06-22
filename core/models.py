@@ -6,13 +6,6 @@ ADDRESS_CHOICES = {
     ('B', 'Billing'),
     ('S', 'Shipping')
 }
-
-COUNTRY_CHOICES = {
-    ('IN','INDIA'),
-    ('AU','AUSTRALIA'),
-    ('SA','SAUDI ARABIA')
-}
-
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)

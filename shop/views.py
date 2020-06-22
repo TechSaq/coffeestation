@@ -10,17 +10,25 @@ from core.models import Address
 
 from .forms import CheckoutForm
 
+def is_valid_form(values):
+    valid = True
+    for value in values:
+        if value == '':
+            valid = False
+            return valid
+    return valid
+
 class ShopView(ListView):
     
     def get(self, *args, **kwargs):
         
         category = self.kwargs['category']
         c=''
-        if category == 'category-cm':
+        if category == 'coffee-machines':
             c = 'CM'
-        if category == 'category-cmt':
+        if category == 'coffee-making-tools':
             c = 'CT'
-        if category == 'category-cc':
+        if category == 'coffee-cups':
             c = 'CC'
 
         context = {
@@ -47,11 +55,16 @@ class CartView(LoginRequiredMixin, ListView):
 
    def get(self, *args, **kwargs):
        cart_items = Order.objects.filter(user=self.request.user)
-       context = {
-           'cart_items': cart_items[0]
-       }
-      
-       return render(self.request, 'cart.html', context)
+
+       if cart_items.exists():
+            context = {
+                'cart_items': cart_items[0]
+            }
+            return render(self.request, 'cart.html', context)
+       else:
+            messages.info(self.request, "No products available. Redirecting to homepage")
+            # add template 404 
+            return redirect("core:home")
 
 @login_required
 def add_to_cart(request, slug):
@@ -153,22 +166,30 @@ def remove_one_from_cart(request, slug):
 
 class CheckoutView(LoginRequiredMixin, ListView):
     def get(self, *args, **kwargs):
-        order = Order.objects.filter(user=self.request.user, is_ordered=False)[0]
-
-        form = CheckoutForm()
         
-        context = {
-            'order': order,
-            'form': form
-        }
-        return render(self.request, "checkout.html", context)
+        order_qs = Order.objects.filter(user=self.request.user, is_ordered=False)
+
+        if order_qs.exists():
+            order = order_qs[0]
+
+            form = CheckoutForm()
+            
+            context = {
+                'order': order,
+                'form': form
+            }
+            return render(self.request, "checkout.html", context)
+        else:
+            messages.info(self.request, "No products available. Redirecting to homepage.")
+            # add template 404
+            return redirect("core:home")
     
     def post(self, *args, **kwargs):
 
         form = CheckoutForm(self.request.POST or None)
 
         try:
-            order = Order.objects.filter(user=self.request.user, is_ordered=False)
+            order = Order.objects.filter(user=self.request.user, is_ordered=False)[0]
 
             if form.is_valid():
                 print("inside valid form")
@@ -181,7 +202,7 @@ class CheckoutView(LoginRequiredMixin, ListView):
                     if address_qs.exists():
                         print("using default address")
                         address = address_qs[0]
-                        order.billing_addresss = address
+                        order.billing_address = address
                         order.save()
                     else:
                         print('no default address')
@@ -193,23 +214,30 @@ class CheckoutView(LoginRequiredMixin, ListView):
                     apartment_address = form.cleaned_data.get('apartment')
                     country = form.cleaned_data.get('country')
                     zipcode = form.cleaned_data.get('zipcode')
-                    
-                    address = Address(
-                        user=self.request.user,
-                        street_address=street_address,
-                        apartmet_address=apartment_address,
-                        country=country,
-                        zipcode=zipcode,
-                        address_type='B'
-                    )
 
-                    address.save()
-                    order.billing_address = address
+                    if is_valid_form([street_address, country, zipcode]):
+                        print("everything is fine")
+                        address = Address(
+                            user=self.request.user,
+                            street_address=street_address,
+                            apartment_address=apartment_address,
+                            country=country,
+                            zipcode=zipcode,
+                            address_type='B'
+                        )
 
-                    set_default = form.cleaned_data.get('set_default')
-                    if set_default:
-                        address.default = True
                         address.save()
+                        order.billing_address = address
+                        order.save()
+
+                        set_default = form.cleaned_data.get('set_default')
+                        if set_default:
+                            address.default = True
+                            address.save()
+                    else:
+                        print("empty fields values")
+                        messages.warning(self.request, "Please enter the values in the form field!")
+                        return redirect("shop:checkout")
 
             else:
                 print("not a valid form")

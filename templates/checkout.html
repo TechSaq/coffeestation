@@ -12,6 +12,16 @@
                 {% csrf_token %}
                     <h3 class="mb-4 billing-heading">Billing Details</h3>
                     <div class="row align-items-end">
+                        <div class="col-md-12">
+                            <div class="form-group mt-4">
+                                <div class="radio">
+                                    <label class="use-default">
+                                    {{ form.use_default }}
+                                    {% comment %} <input type="radio" name="optradio">  {% endcomment %}
+                                    Use Default Address </label>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="firstname">First Name</label>
@@ -72,7 +82,7 @@
                             </div>
                         </div>
                         <div class="w-100"></div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 country-col">
                             <div class="form-group">
                                 <label for="country">State / Country</label>
                                 {{ form.country }}
@@ -91,13 +101,9 @@
                         </div>
                         <div class="w-100"></div>
                         <div class="col-md-12">
-                            <div class="form-group mt-4">
+                            <div class="form-group">
                                 <div class="radio">
-                                    <label class="mr-3">
-                                    {{ form.use_default }}
-                                    {% comment %} <input type="radio" name="optradio">  {% endcomment %}
-                                    Use Default Address </label>
-                                    <label>
+                                    <label class="set-default-col">
                                     {{ form.set_default }}
                                     {% comment %} <input type="radio" name="optradio">  {% endcomment %}
                                     Set this as Default
@@ -280,75 +286,10 @@
 
 {% block pageSpecificJS %}
 <script>
-    $(document).ready(function() {
-
-        var quantitiy = 0;
-        $('.quantity-right-plus').click(function(e) {
-
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            var quantity = parseInt($('#quantity').val());
-
-            // If is not undefined
-
-            $('#quantity').val(quantity + 1);
-
-
-            // Increment
-
-        });
-
-        $('.quantity-left-minus').click(function(e) {
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            var quantity = parseInt($('#quantity').val());
-
-            // If is not undefined
-
-            // Increment
-            if (quantity > 0) {
-                $('#quantity').val(quantity - 1);
-            }
-        });
-
-    });
-</script>
-<script>
-    $(document).ready(function() {
-
-        var quantitiy = 0;
-        $('.quantity-right-plus').click(function(e) {
-
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            var quantity = parseInt($('#quantity').val());
-
-            // If is not undefined
-
-            $('#quantity').val(quantity + 1);
-
-
-            // Increment
-
-        });
-
-        $('.quantity-left-minus').click(function(e) {
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            var quantity = parseInt($('#quantity').val());
-
-            // If is not undefined
-
-            // Increment
-            if (quantity > 0) {
-                $('#quantity').val(quantity - 1);
-            }
-        });
-
-    });
+   $('#id_use_default').change(()=>{
+       $('#bill-form .col-md-6').slideToggle();
+       $('.country-col').slideToggle();
+       $('.set-default-col').slideToggle();
+   })
 </script>
 {% endblock pageSpecificJS %}

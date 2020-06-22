@@ -2,23 +2,23 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar" style="background-image: url({% static 'images/bg_4.jpg' %});">
     <div class="container">
-        <a class="navbar-brand" href={% url 'home' %}>Coffee<small>Station</small></a>
+        <a class="navbar-brand" href={% url 'core:home' %}>Coffee<small>Station</small></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
         </button>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active"><a href={% url 'home' %} class="nav-link">Home</a></li>
+                <li class="nav-item active"><a href={% url 'core:home' %} class="nav-link">Home</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="room.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
-                        <a class="dropdown-item" href={% url 'shop:shop' 'category-cmt' %}>Shop</a>
+                        <a class="dropdown-item" href={% url 'shop:shop' 'coffee-machines' %}>Shop</a>
                         <a class="dropdown-item" href={% url 'shop:product_single' 'slug' %}>Single Product</a>
                         <a class="dropdown-item" href={% url 'shop:cart' %}>Cart</a>
                         <a class="dropdown-item" href={% url 'shop:checkout' %}>Checkout</a>
                     </div>
                 </li>
-                <li class="nav-item"><a href={% url 'contact' %} class="nav-link">Contact</a></li>
+                <li class="nav-item"><a href={% url 'core:contact' %} class="nav-link">Contact</a></li>
                 {% if user.is_authenticated %}
                 <li class="nav-item cart">
                     <a href={% url 'shop:cart' %} class="nav-link">
