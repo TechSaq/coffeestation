@@ -1,0 +1,129 @@
+{% extends 'forall/base.html' %}
+{% load static %}
+
+{% block pageSpecificCSS %}
+<style>
+#payment-form {
+    max-width: 60%;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+#submit {
+    min-width: 150px;
+    margin-top: 100px;
+}
+.ElementsApp, .ElementsApp .InputElement {
+    background: white;
+}
+</style>
+{% endblock pageSpecificCSS %}
+
+{% block content %}
+
+
+<div class="ftco-section container">
+<form action="." method="post" id="payment-form" class="text-center">
+  <div id="card-element">
+    <!-- Elements will create input elements here -->
+  </div>
+
+  <!-- We'll put the error messages in this element -->
+  <div id="card-errors" role="alert"></div>
+
+  <button id="submit" class="btn btn-primary py-2 px-3">Pay</button>
+</form>
+
+</div>
+
+<div class="container">
+    <div class="row justify-content-end">
+            <div class="col col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
+                <div class="cart-total mb-3">
+                    <h3>Cart Totals</h3>
+                    <p class="d-flex">
+                        <span>Subtotal</span>
+                        <span>${{ cart_items.get_cart_total }}</span>
+                    </p>
+                    <p class="d-flex">
+                        <span>Delivery</span>
+                        <span>$0.00</span>
+                    </p>
+                    <p class="d-flex">
+                        <span>Discount</span>
+                        <span>$0.00</span>
+                    </p>
+                    <hr>
+                    <p class="d-flex total-price">
+                        <span>Total</span>
+                        <span>${{ cart_items.get_cart_total }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% include '_order_summary_snippet.html' %}
+
+{% endblock content %}
+
+{% block pageSpecificJS %}
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+
+var stripe = Stripe('pk_test_wT8qPsFVOkOkZdVfT0TBMd7L00KeHZAWKD');
+var elements = stripe.elements();
+
+var style = {
+  base: {
+    color: "#32325d",
+  }
+};
+
+var card = elements.create("card", { style: style });
+card.mount("#card-element");
+
+card.on('change', ({error}) => {
+  const displayError = document.getElementById('card-errors');
+  if (error) {
+    displayError.textContent = error.message;
+  } else {
+    displayError.textContent = '';
+  }
+});
+
+
+var form = document.getElementById('payment-form');
+
+form.addEventListener('submit', function(ev) {
+  ev.preventDefault();
+  stripe.confirmCardPayment(clientSecret, {
+    payment_method: {
+      card: card,
+      billing_details: {
+        name: 'Jenny Rosen'
+      }
+    }
+  }).then(function(result) {
+    if (result.error) {
+      // Show error to your customer (e.g., insufficient funds)
+      console.log(result.error.message);
+    } else {
+      // The payment has been processed!
+      if (result.paymentIntent.status === 'succeeded') {
+        // Show a success message to your customer
+        // There's a risk of the customer closing the window before callback
+        // execution. Set up a webhook or plugin to listen for the
+        // payment_intent.succeeded event that handles any business critical
+        // post-payment actions.
+      }
+    }
+  });
+});
+
+
+</script>
+
+
+{% endblock pageSpecificJS %}

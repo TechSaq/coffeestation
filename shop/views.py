@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, View
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,6 +9,8 @@ from .models import Category, Item, OrderItem, Order
 from core.models import Address
 
 from .forms import CheckoutForm
+
+import stripe
 
 def is_valid_form(values):
     valid = True
@@ -245,4 +247,29 @@ class CheckoutView(LoginRequiredMixin, ListView):
         except:
             pass
 
-        return redirect("shop:checkout")
+        return redirect("shop:payment")
+
+
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        
+        order = Order.objects.get(user=self.request.user, is_ordered=False)
+        if order.billing_address:
+            context ={
+                'cart_items': order
+            }
+            return render(self.request, 'payment.html', context)
+        else:
+            messages.info(self.request, "Add billing address first!")
+            return redirect("shop:checkout")
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, is_ordered=False)
+        token = self.request.POST.get('stripeToken')
+        amount = int(order.get_cart_total())
+
+        charge = stripe.PaymentIntent.create(
+            amount=1099,
+            currency='inr', 
+        )
+
+        return redirect("core:home")
