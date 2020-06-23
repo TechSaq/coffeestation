@@ -50,7 +50,8 @@
                                     {% for item in items %}
                                     <div class="col-lg-3 col-md-4 col-sm-6">
                                         <div class="menu-entry">
-                                            <a href="#" class="img" style="background-image: url({% static 'images/menu-1.jpg' %});"></a>
+                                            {% comment %} <a href="#" class="img" style="background-image: url({% static 'images/menu-1.jpg' %});"></a> {% endcomment %}
+                                            <a href="#" class="img" style="background-image:url({{ item.image.url }}) "></a>
                                             <div class="text text-center pt-4">
                                                 <h3><a href="product-single.html">{{ item.title }}</a></h3>
                                                 <p>{{ item.description }}</p>
