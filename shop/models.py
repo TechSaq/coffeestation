@@ -95,3 +95,14 @@ class Order(models.Model):
             total += order_item.get_total_item_price()
 
         return total
+
+
+class Payment(models.Model):
+    stripe_charge_id = models.CharField(max_length=50, blank=False, null=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.SET_NULL, blank=True, null=True)
+    amount = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username

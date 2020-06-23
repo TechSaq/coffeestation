@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
-from .models import Category, Item, OrderItem, Order
+from .models import Category, Item, OrderItem, Order, Payment
 from core.models import Address
 
 from .forms import CheckoutForm
@@ -56,7 +56,7 @@ class ProductSingleView(ListView):
 class CartView(LoginRequiredMixin, ListView):
 
    def get(self, *args, **kwargs):
-       cart_items = Order.objects.filter(user=self.request.user)
+       cart_items = Order.objects.filter(user=self.request.user, is_ordered=False)
 
        if cart_items.exists():
             context = {
@@ -254,22 +254,88 @@ class PaymentView(View):
     def get(self, *args, **kwargs):
         
         order = Order.objects.get(user=self.request.user, is_ordered=False)
+        
         if order.billing_address:
+            stripe.api_key = 'sk_test_3pALFqN1hDtd3CojPFW88dWi009Ybdrqsy'
+            amount = int(order.get_cart_total())
+
+            intent = stripe.PaymentIntent.create(
+                amount=amount,
+                currency='usd',
+                # Verify your integration in this guide by including this parameter
+                metadata={'integration_check': 'accept_a_payment'},
+            )
             context ={
-                'cart_items': order
+                'cart_items': order,
+                'client_secret': intent.client_secret
             }
             return render(self.request, 'payment.html', context)
         else:
             messages.info(self.request, "Add billing address first!")
             return redirect("shop:checkout")
+
+
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, is_ordered=False)
-        token = self.request.POST.get('stripeToken')
         amount = int(order.get_cart_total())
 
-        charge = stripe.PaymentIntent.create(
-            amount=1099,
-            currency='inr', 
-        )
+        try:
+            stripe.api_key = 'sk_test_3pALFqN1hDtd3CojPFW88dWi009Ybdrqsy'
 
-        return redirect("core:home")
+            intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency='usd',
+            # Verify your integration in this guide by including this parameter
+            metadata={'integration_check': 'accept_a_payment'},
+            )
+
+            payment = Payment(stripe_charge_id=intent['id'],
+                                user=self.request.user,
+                                amount=amount,
+                            )
+            payment.save()
+
+            order_item = order.items.all()
+            order_item.update(is_ordered=True)
+            for item in order_item:
+                item.save()
+
+            order.is_ordered = True
+            order.payment = payment
+            order.save()
+            
+            messages.success(self.request, "Your order has been placed successfully!!")
+            messages.success(self.request, "Thanks for shopping!!")
+            return redirect("core:home")
+        except stripe.error.CardError as e:
+            messages.warning(self.request, f"{ e.error.message }")
+            return redirect("/")
+        except stripe.error.RateLimitError as e:
+            # Too many requests made to the API too quickly
+            messages.warning(self.request, 'Rate Limit Error')
+            return redirect("/")
+        except stripe.error.InvalidRequestError as e:
+            # Invalid parameters were supplied to Stripe's API
+            messages.warning(self.request, 'Invalid parameters')
+            return redirect("/")
+        except stripe.error.AuthenticationError as e:
+            # Authentication with Stripe's API failed
+            # (maybe you changed API keys recently)
+            messages.warning(self.request, 'Not Authenticated')
+            return redirect("/")
+        except stripe.error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            messages.warning(self.request, 'Network error')
+            return redirect("/")
+        except stripe.error.StripeError as e:
+            # Display a very generic error to the user, and maybe send
+            # yourself an email
+            messages.warning(
+                self.request, 'Something went wrong. You were not charged. Try Again!!')
+            return redirect("/")
+        except Exception as e:
+            # send an emaill to ourselves
+            print(e)
+            messages.warning(
+                self.request, 'A serious error occured. We are notified and working on it.')
+            return redirect("/")
