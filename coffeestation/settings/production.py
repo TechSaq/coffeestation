@@ -2,7 +2,7 @@ from .base import *
 
 import django_heroku
 
-DEBUG = config('DEBUG')
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['coffeestation.herokuapp.com']
 
