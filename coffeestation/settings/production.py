@@ -1,9 +1,17 @@
 from .base import *
 
+import django_heroku
+
 DEBUG = False
+
+ALLOWED_HOSTS = ['coffeestation.herokuapp.com']
 
 INSTALLED_APPS += [
     'storages',
+]
+
+MIDDLEWARE += [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
@@ -17,3 +25,14 @@ STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_FILE_STORAGE = 'coffeestation.storage_backends.MediaStorage'
+
+SECURE_SSL_REDIRECT = True
+SECURE_SSL_EXEMPT = []
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_REFERRER_POLIC = 'same-origin'
+
+django_heroku.settings(locals())
