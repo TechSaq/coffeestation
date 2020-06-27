@@ -48,7 +48,8 @@ class ProductSingleView(ListView):
 
         slug = self.kwargs['slug']
         context = {
-            'slug': slug
+            'slug': slug,
+            'item': Item.objects.get(slug=slug),
         }
         return render(self.request, 'product-single.html', context)
 

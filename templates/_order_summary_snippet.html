@@ -1,0 +1,52 @@
+{% load static %}
+<section class="ftco-section ftco-cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 ftco-animate">
+                <div class="cart-list">
+                    <table class="table">
+                        <thead class="thead-primary">
+                            <tr class="text-center">
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
+                                <th>Product</th>
+                                <th> Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for cart in cart_items.items.all %}
+                        {% comment %} <h1>{{ cart }}</h1> {% endcomment %}
+                            <tr class="text-center">
+                                <td class="product-remove"><a href={% url 'shop:remove-from-cart' cart.item.slug %}><span class="icon-close"></span></a></td>
+
+                                <td class="image-prod">
+                                    <div class="img" style="background-image:url({% static 'images/menu-2.jpg' %});"></div>
+                                </td>
+
+                                <td class="product-name">
+                                    <h3>{{ cart.item.title }}</h3>
+                                    <p> {{ cart.item.description }}</p>
+                                </td>
+
+                                <td class="price">{{ cart.item.price }}</td>
+
+                                <td class="quantity">
+                                    <div class="input-group mb-3 d-flex justify-content-center align-items-center">
+                                        <a href={% url 'shop:remove-one-from-cart' cart.item.slug %}><span class="icon-minus"></span></i></a>
+                                        <input type="text" name="quantity" class="quantity form-control input-number mx-2" value={{ cart.quantity }} min="1" max="100">
+                                        <a href={% url 'shop:add-to-cart' cart.item.slug %}><span class="icon-plus"></span></i></a>
+                                    </div>
+                                </td>
+
+                                <td class="total">{{ cart.get_total_item_price }}</td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</section> 

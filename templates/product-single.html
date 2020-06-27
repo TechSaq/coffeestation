@@ -22,17 +22,13 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6 mb-5 ftco-animate">
-                <a href="images/menu-2.jpg" class="image-popup"><img src={% static 'images/menu-2.jpg' %} class="img-fluid" alt="Colorlib Template"></a>
+                <a href="images/menu-2.jpg" class="image-popup"><img src={{ item.image.url }} class="img-fluid" alt={{ item.title }}></a>
             </div>
             <div class="col-lg-6 product-details pl-md-5 ftco-animate">
-                <h3>Creamy Latte Coffee</h3>
-                <p class="price"><span>$4.90</span></p>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-                <p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should
-                    turn around and return to its own, safe country. But nothing the copy said could convince her and so it didn’t take long until a few insidious Copy Writers ambushed her, made her drunk with Longe and Parole and dragged her into their
-                    agency, where they abused her for their.
-                </p>
-                <div class="row mt-4">
+                <h3>{{ item.title }}</h3>
+                <p class="price"><span>${{ item.price }}</span></p>
+                <p>{{ item.description }}</p>
+                {% comment %} <div class="row mt-4">
                     <div class="col-md-6">
                         <div class="form-group d-flex">
                             <div class="select-wrap">
@@ -60,8 +56,8 @@
 	                 </button>
 	             	</span>
                     </div>
-                </div>
-                <p><a href="{% url 'shop:cart' %}" class="btn btn-primary py-3 px-5">Add to Cart</a></p>
+                </div> {% endcomment %}
+                <p><a href="{{ item.get_add_to_cart_url }}" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
             </div>
         </div>
     </div>
