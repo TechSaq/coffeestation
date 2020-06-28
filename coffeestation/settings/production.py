@@ -4,7 +4,6 @@ import django_heroku
 
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['coffeestation.herokuapp.com']
 
 INSTALLED_APPS += [
     'storages',
@@ -36,6 +35,8 @@ CSRF_COOKIE_SECURE = True
 SECURE_REFERRER_POLIC = 'same-origin'
 
 django_heroku.settings(locals())
+
+ALLOWED_HOSTS = ['coffeestation.herokuapp.com']
 
 LOGGING = {
     'version': 1,
