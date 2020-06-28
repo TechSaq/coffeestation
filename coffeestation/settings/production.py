@@ -45,7 +45,7 @@ EMAIL_HOST_PASSWORD = 'Zee*(&(69seR'
 
 ALLOWED_HOSTS = ['coffeestation.herokuapp.com']
 
-ADMINS = [('Mohd Saquib', 'ans2sqb@gmail.com')]
+ADMINS = [('Mohd Saquib', 'ansarimehtab22@gmail.com')]
 
 LOGGING = {
     'version': 1,
