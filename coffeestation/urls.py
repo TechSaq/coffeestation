@@ -27,7 +27,7 @@ urlpatterns = [
     path('shop/', include('shop.urls')),
 ]
 
-urlpatterns += static(production.STATIC_URL, document_root=base.STATIC_ROOT)
+# urlpatterns += static(production.STATIC_URL, document_root=base.STATIC_ROOT)
 
-urlpatterns += static(base.MEDIA_URL,
-                      document_root=base.MEDIA_ROOT)
+# urlpatterns += static(base.MEDIA_URL,
+#                       document_root=base.MEDIA_ROOT)
