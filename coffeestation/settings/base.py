@@ -111,7 +111,7 @@ USE_TZ = True
 
 SITE_ID = 3
 
-
+DEBUG_PROPAGATE_EXCEPTIONS = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -155,6 +155,12 @@ LOGGING = {
         }
     },
     'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'mysite.log',
+            'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
@@ -171,6 +177,15 @@ LOGGING = {
         'myproject.custom': {
             'handlers': ['mail_admins'],
             'level': 'INFO',
-        }
+        },
+        'django': {
+            'handlers': ['file'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'MYAPP': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
     }
 }
