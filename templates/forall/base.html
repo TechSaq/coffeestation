@@ -14,7 +14,11 @@
     </title>
 
     {% include "forall/_link_files.html" %} 
-
+    <style>
+        .owl-carousel.owl-drag .owl-item{
+            touch-action: manipulation;
+        }
+    </style>
     {% block pageSpecificCSS %} 
     {% endblock pageSpecificCSS %}
 
