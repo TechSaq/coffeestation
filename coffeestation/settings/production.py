@@ -9,9 +9,6 @@ INSTALLED_APPS += [
     'storages',
 ]
 
-MIDDLEWARE += [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-]
 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
@@ -35,7 +32,7 @@ CSRF_COOKIE_SECURE = True
 SECURE_REFERRER_POLIC = 'same-origin'
 
 
-ALLOWED_HOSTS = ['coffeestation.herokuapp.com']
+ALLOWED_HOSTS = ['coffeestation.herokuapp.com',]
 
 
 django_heroku.settings(locals())

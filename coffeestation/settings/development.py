@@ -4,8 +4,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# EMAIL_BACKEND = config('DJANGO_EMAIL_BACKEND',
-                    #    default='django.core.mail.backends.console.EmailBackend')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
 
 # DATABASES = {
 #     'default': {
