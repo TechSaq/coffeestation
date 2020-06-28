@@ -38,6 +38,8 @@ django_heroku.settings(locals())
 
 ALLOWED_HOSTS = ['coffeestation.herokuapp.com']
 
+ADMINS = [('Mohd Saquib', 'ans2sqb@gmail.com')]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
