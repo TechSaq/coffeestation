@@ -6,19 +6,21 @@
 
 {% block content %}
 
-<div class="container my-5 py-5 col-3">
+<div class="container my-5 py-5 col-md-6 col-lg-3">
 <h1>{% trans "Sign Up" %}</h1>
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+  <div class="form-group">
+  {{ form.as_table }}
+  </div>
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <div class="text-center">
-    <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+    <button type="submit" class="btn btn-outline-primary btn-primary">{% trans "Sign Up" %} &raquo;</button>
   </div>
 </form>
 </div>

@@ -1,4 +1,5 @@
 from django import forms
+from allauth.account.forms import SignupForm
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
@@ -55,3 +56,39 @@ class CheckoutForm(forms.Form):
     #                                     attrs={'class':'mr-2'}
     #                                    )
     #                                 )
+
+# class MySignupForm(SignupForm):
+#     username = forms.CharField(max_length=30, required=True,
+#                                widget=forms.TextInput(
+#                                    attrs={
+#                                        'class': 'form-control',
+#                                         'placeholder':'Username'}
+#                                ))
+
+#     email = forms.CharField(max_length=30, required=False,
+#                                widget=forms.EmailInput(
+#                                    attrs={
+#                                        'class': 'form-control',
+#                                        'placeholder': 'Enter your Email'}
+#                                ))
+#     password = forms.CharField(max_length=30, required=False,
+#                                widget=forms.PasswordInput(
+#                                    attrs={
+#                                        'class': 'form-control',
+#                                        'placeholder': 'Password'}
+#                                ))
+#     passwordc = forms.CharField(max_length=30, required=False,
+#                                 widget=forms.PasswordInput(
+#                                     attrs={
+#                                         'class': 'form-control',
+#                                         'placeholder':'Confirm Password'}
+#                                 ))
+
+
+#     def signup(self, request, user):
+#         user.username = self.cleaned_data['username']
+#         user.email = self.cleaned_data['email']
+#         user.password = self.cleaned_data['password']
+#         user.passwordc = self.cleaned_data['passwordc']
+#         user.save()
+#         return user
