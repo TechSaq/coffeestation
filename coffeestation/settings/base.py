@@ -133,7 +133,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-ADMINS = [('Mohd Saquib', 'ansarimehtab22@gmail.com')]
+ADMINS = [('Ansari Mehtab', 'ansarimehtab22@gmail.com')]
 
 LOGGING = {
     'version': 1,
@@ -148,10 +148,17 @@ LOGGING = {
             'style': '{',
         },
     },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
         }
     },
     'loggers': {
