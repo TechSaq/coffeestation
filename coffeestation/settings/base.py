@@ -124,6 +124,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'allstatics')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+SERVER_EMAIL = 'django@my-domain.com'
 
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
