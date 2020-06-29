@@ -4,6 +4,10 @@
 {% block pageSpecificCSS %}
 <style>
 
+section {
+  padding: 1em 0 6em 0 !important;
+}
+
 #payment-form label {
     font-size: 1.5rem;
     color: white;
@@ -44,14 +48,14 @@
   background-color: #fefde5 !important;
 }
 #submit {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 </style>
 {% endblock pageSpecificCSS %}
 
 {% block content %}
 
-<div class="ftco-section container text-center">
+<div class="ftco-section container text-center mt-5">
   <form id="payment-form" action={% url 'shop:payment' %} method='post'>
     {% csrf_token %}
     <label for="card-element">
@@ -64,37 +68,12 @@
     <!-- We'll put the error messages in this element -->
     <div id="card-errors" role="alert"></div>
 
-    <button id="submit" class="btn btn-primary py-3 px-5" data-secret="{{ client_secret }}">Pay</button>
+    <button id="submit" class="btn btn-primary py-3 px-5" data-secret="{{ client_secret }}">Pay ${{ cart_items.get_cart_total }}</button>
   </form>
 </div>
-
-<div class="container">
-    <div class="row justify-content-end">
-            <div class="col col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
-                <div class="cart-total mb-3">
-                    <h3>Cart Totals</h3>
-                    <p class="d-flex">
-                        <span>Subtotal</span>
-                        <span>${{ cart_items.get_cart_total }}</span>
-                    </p>
-                    <p class="d-flex">
-                        <span>Delivery</span>
-                        <span>$0.00</span>
-                    </p>
-                    <p class="d-flex">
-                        <span>Discount</span>
-                        <span>$0.00</span>
-                    </p>
-                    <hr>
-                    <p class="d-flex total-price">
-                        <span>Total</span>
-                        <span>${{ cart_items.get_cart_total }}</span>
-                    </p>
-                </div>
-            </div>
-        </div>
+<div class="container text-center">
+  <h3>Order Summary</h3>
 </div>
-
 {% include '_order_summary_snippet.html' %}
 
 {% endblock content %}
