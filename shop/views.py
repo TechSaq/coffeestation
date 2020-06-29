@@ -37,7 +37,8 @@ class ShopView(ListView):
         context = {
             'categories': Category.objects.all(),
             'items': Item.objects.filter(category=c),
-            'category_param': category
+            'category_param': category,
+            'shop':True
         }
         return render(self.request, 'shop.html', context)
     
@@ -64,7 +65,8 @@ class CartView(LoginRequiredMixin, View):
        print("inside func")
        if cart_items.exists():
             context = {
-                'cart_items': cart_items[0]
+                'cart_items': cart_items[0],
+                'cart': True
             }
             print("inside if")
             return render(self.request, 'cart.html', context)
@@ -184,7 +186,8 @@ class CheckoutView(LoginRequiredMixin, View):
             
             context = {
                 'order': order,
-                'form': form
+                'form': form,
+                'checkout':True
             }
             return render(self.request, "checkout.html", context)
         else:

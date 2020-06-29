@@ -1,6 +1,10 @@
 {% extends 'forall/base.html' %}
 {% load static %}
 
+{% block page_title %}
+    Shop
+{% endblock page_title %}
+
 {% block pageSpecificCSS %}
 <style>
     #v-pills-tabContent {
@@ -68,3 +72,14 @@
     </div>
 </section>
 {% endblock content %}
+
+{% block pageSpecificJS %}
+    {% comment %} <script>
+        const title = document.title
+        let li_a = document.querySelectorAll('.navbar-nav li > a')
+        console.log(li_a)
+        for( item in li_a ){
+            console.log(item.innerText)
+        }
+    </script> {% endcomment %}
+{% endblock pageSpecificJS %}

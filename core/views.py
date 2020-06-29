@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import View
 from django.contrib import messages
 # from django.conf.settings import production
 from django.core.mail import send_mail
@@ -7,11 +7,21 @@ from django.core.mail import send_mail
 # Create your views here.
 
 
-class HomeView(TemplateView):
-    template_name = "index.html"
+class HomeView(View):
 
-class ContactView(TemplateView):
-    template_name = "contact.html"
+    def get(self, *args, **kwargs):
+        context = {
+            'home': True
+        }
+        return render(self.request, "index.html", context)
+
+class ContactView(View):
+
+    def get(self, *args, **kwargs):
+        context = {
+            'contact': True
+        }
+        return render(self.request, "contact.html", context)
 
 
 def email(request):    
