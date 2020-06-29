@@ -22,15 +22,15 @@
                                 <td class="product-remove"><a href={% url 'shop:remove-from-cart' cart.item.slug %}><span class="icon-close"></span></a></td>
 
                                 <td class="image-prod">
-                                    <div class="img" style="background-image:url({% static 'images/menu-2.jpg' %});"></div>
+                                    <div class="img" style="background-image:url({{ cart.item.image.url }});"></div>
                                 </td>
 
                                 <td class="product-name">
                                     <h3>{{ cart.item.title }}</h3>
-                                    <p> {{ cart.item.description }}</p>
+                                    {% comment %} <p> {{ cart.item.description }}</p> {% endcomment %}
                                 </td>
 
-                                <td class="price">{{ cart.item.price }}</td>
+                                <td class="price">${{ cart.item.price }}</td>
 
                                 <td class="quantity">
                                     <div class="input-group mb-3 d-flex justify-content-center align-items-center">
@@ -40,7 +40,7 @@
                                     </div>
                                 </td>
 
-                                <td class="total">{{ cart.get_total_item_price }}</td>
+                                <td class="total">${{ cart.get_total_item_price }}</td>
                             </tr>
                         {% endfor %}
 
