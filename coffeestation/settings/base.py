@@ -7,6 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 SECRET_KEY = config('SECRET_KEY')
 
+APPEND_SLASH = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -137,57 +138,3 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 ADMINS = [('Ansari Mehtab', 'ansarimehtab22@gmail.com'),]
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        }
-    },
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'mysite.log',
-            'formatter': 'verbose'
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'myproject.custom': {
-            'handlers': ['mail_admins'],
-            'level': 'INFO',
-        },
-        'django': {
-            'handlers': ['file'],
-            'propagate': True,
-            'level': 'DEBUG',
-        },
-        'MYAPP': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-        },
-    }
-}

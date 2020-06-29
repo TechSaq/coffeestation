@@ -3,6 +3,7 @@ from django.views.generic import TemplateView, ListView, View
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from .models import Category, Item, OrderItem, Order, Payment
@@ -54,18 +55,22 @@ class ProductSingleView(ListView):
         return render(self.request, 'product-single.html', context)
 
 
-class CartView(LoginRequiredMixin, ListView):
+class CartView(LoginRequiredMixin, View):
+    
+   print("inside view")
 
    def get(self, *args, **kwargs):
        cart_items = Order.objects.filter(user=self.request.user, is_ordered=False)
-
+       print("inside func")
        if cart_items.exists():
             context = {
                 'cart_items': cart_items[0]
             }
+            print("inside if")
             return render(self.request, 'cart.html', context)
        else:
             messages.info(self.request, "No products available. Redirecting to homepage")
+            print("inside else")
             # add template 404 
             return redirect("core:home")
 
@@ -167,7 +172,7 @@ def remove_one_from_cart(request, slug):
         messages.info(request, "You don't have any order yet!")
         return redirect("shop:shop", category="category-cmt")
 
-class CheckoutView(LoginRequiredMixin, ListView):
+class CheckoutView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         
         order_qs = Order.objects.filter(user=self.request.user, is_ordered=False)
@@ -251,7 +256,7 @@ class CheckoutView(LoginRequiredMixin, ListView):
         return redirect("shop:payment")
 
 
-class PaymentView(View):
+class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         
         order = Order.objects.get(user=self.request.user, is_ordered=False)

@@ -6,6 +6,10 @@
     #v-pills-tabContent {
         width: 100vw;
     }
+
+    .item-desc {
+        height: 80px;
+    }
 </style>
 {% endblock pageSpecificCSS %}
 
@@ -47,8 +51,8 @@
                                             <a href="#" class="img" style="background-image:url({{ item.image.url }}) "></a>
                                             <div class="text text-center pt-4">
                                                 <h3><a href={% url 'shop:product_single' item.slug  %}>{{ item.title }}</a></h3>
-                                                <p>{{ item.description }}</p>
-                                                <p class="price"><span>{{ item.price }}</span></p>
+                                                <p class="item-desc">{{ item.description | truncatechars:80}}</p>
+                                                <p class="price"><span>${{ item.price }}</span></p>
                                                 <p><a href="{{ item.get_add_to_cart_url }}" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
                                             </div>
                                         </div>
