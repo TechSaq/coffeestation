@@ -52,8 +52,7 @@
 {% block content %}
 
 <div class="ftco-section container text-center">
-
-    <form id="payment-form" action='.' method='post'>
+  <form id="payment-form" action={% url 'shop:payment' %} method='post'>
     {% csrf_token %}
     <label for="card-element">
       Credit or debit card
@@ -66,7 +65,7 @@
     <div id="card-errors" role="alert"></div>
 
     <button id="submit" class="btn btn-primary py-3 px-5" data-secret="{{ client_secret }}">Pay</button>
-    </form>
+  </form>
 </div>
 
 <div class="container">
