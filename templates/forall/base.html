@@ -18,6 +18,9 @@
         .owl-carousel.owl-drag .owl-item{
             touch-action: manipulation;
         }
+        .hide {
+            display: none;
+        }
     </style>
     {% block pageSpecificCSS %} 
     {% endblock pageSpecificCSS %}
@@ -40,6 +43,14 @@
     {% include 'forall/_loader_snippet.html' %} 
     
     {% include 'forall/_script_files.html' %} 
+
+    <script>
+        const alertp = document.querySelector('.alert-container')
+        const close = document.querySelector('.alert button.close')
+        close.addEventListener('click', ()=>{
+            alertp.classList.add('hide')
+        })
+    </script>
 
     {% block pageSpecificJS %} 
     {% endblock pageSpecificJS %}
