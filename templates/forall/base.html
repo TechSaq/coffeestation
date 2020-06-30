@@ -18,9 +18,6 @@
         .owl-carousel.owl-drag .owl-item{
             touch-action: manipulation;
         }
-        .hide {
-            display: none;
-        }
     </style>
     {% block pageSpecificCSS %} 
     {% endblock pageSpecificCSS %}
@@ -48,8 +45,9 @@
         const alertp = document.querySelector('.alert-container')
         const close = document.querySelector('.alert button.close')
         close.addEventListener('click', ()=>{
-            alertp.classList.add('hide')
+            $('.alert-container').slideUp("slow")
         })
+        
     </script>
 
     {% block pageSpecificJS %} 
