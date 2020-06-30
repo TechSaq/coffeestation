@@ -43,7 +43,8 @@
 					</div>
 					<div class="col-md-1"></div>
           <div class="col-md-6 ftco-animate">
-            <form action="#" class="contact-form">
+            <form action="." class="contact-form" method="post">
+            {% csrf_token %}
             	<div class="row">
             		<div class="col-md-6">
 	                <div class="form-group">
@@ -71,6 +72,6 @@
       </div>
     </section>
 
-    <div id="map"></div>
+    {% include 'forall/_map_snippet.html' %}
 
 {% endblock content %}

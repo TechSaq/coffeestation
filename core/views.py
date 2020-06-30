@@ -23,6 +23,13 @@ class ContactView(View):
         }
         return render(self.request, "contact.html", context)
 
+    def post(self, *args, **kwargs):
+        messages.success(
+            self.request, "Your query has been received! Thanks for reaching us!")
+        return redirect("core:home")
+
+
+
 
 def email(request):    
     subject = 'Thank you for registering to our site'
