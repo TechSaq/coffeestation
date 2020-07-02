@@ -29,10 +29,12 @@ class ShopView(ListView):
         c=''
         if category == 'coffee-machines':
             c = 'CM'
-        if category == 'coffee-making-tools':
+        if category == 'coffee-tools':
             c = 'CT'
         if category == 'coffee-cups':
             c = 'CC'
+        if category == 'imported-coffee':
+            c = 'IC'
 
         context = {
             'categories': Category.objects.all(),
@@ -263,25 +265,31 @@ class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         
         order = Order.objects.get(user=self.request.user, is_ordered=False)
-        
-        if order.billing_address:
-            stripe.api_key = 'sk_test_3pALFqN1hDtd3CojPFW88dWi009Ybdrqsy'
-            amount = int(order.get_cart_total())
+        print("----------------") 
+        print(order)
 
-            intent = stripe.PaymentIntent.create(
-                amount=amount,
-                currency='usd',
-                # Verify your integration in this guide by including this parameter
-                metadata={'integration_check': 'accept_a_payment'},
-            )
-            context ={
-                'cart_items': order,
-                'client_secret': intent.client_secret
-            }
-            return render(self.request, 'payment.html', context)
+        if order:
+            if order.billing_address:
+                stripe.api_key = 'sk_test_3pALFqN1hDtd3CojPFW88dWi009Ybdrqsy'
+                amount = int(order.get_cart_total())
+
+                intent = stripe.PaymentIntent.create(
+                    amount=amount,
+                    currency='usd',
+                    # Verify your integration in this guide by including this parameter
+                    metadata={'integration_check': 'accept_a_payment'},
+                )
+                context ={
+                    'cart_items': order,
+                    'client_secret': intent.client_secret
+                }
+                return render(self.request, 'payment.html', context)
+            else:
+                messages.info(self.request, "Add billing address first!")
+                return redirect("shop:checkout")
         else:
-            messages.info(self.request, "Add billing address first!")
-            return redirect("shop:checkout")
+            messages.info(self.request, "You don't have any order to pay !!")
+            return redirect("shop:shop")
 
 
     def post(self, *args, **kwargs):
@@ -292,10 +300,10 @@ class PaymentView(LoginRequiredMixin, View):
             stripe.api_key = 'sk_test_3pALFqN1hDtd3CojPFW88dWi009Ybdrqsy'
 
             intent = stripe.PaymentIntent.create(
-            amount=amount,
-            currency='usd',
-            # Verify your integration in this guide by including this parameter
-            metadata={'integration_check': 'accept_a_payment'},
+                amount=amount,
+                currency='usd',
+                # Verify your integration in this guide by including this parameter
+                metadata={'integration_check': 'accept_a_payment'},
             )
 
             payment = Payment(stripe_charge_id=intent['id'],

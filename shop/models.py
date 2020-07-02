@@ -7,8 +7,9 @@ from core.models import Address
 CATEGORY_CHOICES = [
     ('NO', 'Select Category'),
     ('CM','Coffee Machines'),
-    ('CT','Coffee Making Tools'),
+    ('CT','Coffee Tools'),
     ('CC', 'Coffee Cups'),
+    ('IC', 'Imported Coffee'),
 ]
 class Category(models.Model):
     title = models.CharField(max_length=50)
