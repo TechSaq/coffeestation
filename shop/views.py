@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from .models import Category, Item, OrderItem, Order, Payment
 from core.models import Address
@@ -59,22 +60,20 @@ class ProductSingleView(ListView):
 
 
 class CartView(LoginRequiredMixin, View):
-    
-   print("inside view")
 
    def get(self, *args, **kwargs):
        cart_items = Order.objects.filter(user=self.request.user, is_ordered=False)
-       print("inside func")
+
        if cart_items.exists():
+           
             context = {
                 'cart_items': cart_items[0],
                 'cart': True
             }
-            print("inside if")
+            
             return render(self.request, 'cart.html', context)
        else:
             messages.info(self.request, "No products available. Redirecting to homepage")
-            print("inside else")
             # add template 404 
             return redirect("core:home")
 
@@ -99,6 +98,8 @@ def add_to_cart(request, slug):
             messages.info(request, "This item has been updated!")
             return redirect("shop:cart")
         else:
+            order_item.quantity = 1
+            order_item.save()
             messages.info(request, "This item has been added to cart!")
             order.items.add(order_item)
             return redirect("shop:cart")
@@ -141,6 +142,34 @@ def remove_from_cart(request, slug):
         return redirect("shop:shop",  category="category-cmt")
 
 
+@login_required
+def add_one_to_cart(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+
+    order_qs = Order.objects.filter(user=request.user, is_ordered=False)
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+        if order.items.filter(item__slug=item.slug).exists():
+            order_item = OrderItem.objects.filter(
+                item=item,
+                is_ordered=False,
+                user=request.user
+            )[0]
+
+            order_item.quantity += 1
+            order_item.save()
+            data = {
+                'quantity': order_item.quantity,
+            }
+            return JsonResponse(data)
+        else:
+            messages.info(request, "This item is not in your cart!")
+            return redirect("shop:cart")
+    else:
+        messages.info(request, "You don't have any order yet!")
+        return redirect("shop:shop", category="category-cmt")
 
 @login_required
 def remove_one_from_cart(request, slug):
@@ -161,14 +190,21 @@ def remove_one_from_cart(request, slug):
             if order_item.quantity > 1:
                 order_item.quantity -= 1
                 order_item.save()
-                messages.info(request, "This item has been updated!")
-                return redirect("shop:cart")
+                data={
+                    'quantity': order_item.quantity,
+                }
+                return JsonResponse(data)
             else:
+                print("inside iffff")
                 messages.info(request, "This item has been removed from your cart!")
                 order_item.quantity -= 1
                 order_item.save()
                 order.items.remove(order_item)
-                return redirect("shop:shop", category="category-cmt")
+                # return redirect("shop:shop", category="coffee-machines")
+                data = {
+                    'quantity': order_item.quantity,
+                }
+                return JsonResponse(data)
         else:
             messages.info(request, "This item is not in your cart!")
             return redirect("shop:cart")
@@ -205,7 +241,6 @@ class CheckoutView(LoginRequiredMixin, View):
             order = Order.objects.filter(user=self.request.user, is_ordered=False)[0]
 
             if form.is_valid():
-                print("inside valid form")
                 use_default = form.cleaned_data.get('use_default')
                 
                 if use_default:
@@ -213,23 +248,19 @@ class CheckoutView(LoginRequiredMixin, View):
                                                         default=True,
                                                         address_type='B')
                     if address_qs.exists():
-                        print("using default address")
                         address = address_qs[0]
                         order.billing_address = address
                         order.save()
                     else:
-                        print('no default address')
                         messages.info(self.request, "No default address available!")
                         return redirect("shop:checkout")
                 else:
-                    print('user is entering the address')
                     street_address = form.cleaned_data.get('street_name')
                     apartment_address = form.cleaned_data.get('apartment')
                     country = form.cleaned_data.get('country')
                     zipcode = form.cleaned_data.get('zipcode')
 
                     if is_valid_form([street_address, country, zipcode]):
-                        print("everything is fine")
                         address = Address(
                             user=self.request.user,
                             street_address=street_address,
@@ -248,12 +279,10 @@ class CheckoutView(LoginRequiredMixin, View):
                             address.default = True
                             address.save()
                     else:
-                        print("empty fields values")
                         messages.warning(self.request, "Please enter the values in the form field!")
                         return redirect("shop:checkout")
 
             else:
-                print("not a valid form")
                 messages.info("Please enter valid details!!")
         except:
             pass
@@ -265,8 +294,6 @@ class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         
         order = Order.objects.get(user=self.request.user, is_ordered=False)
-        print("----------------") 
-        print(order)
 
         if order:
             if order.billing_address:
@@ -352,7 +379,6 @@ class PaymentView(LoginRequiredMixin, View):
             return redirect("/")
         except Exception as e:
             # send an emaill to ourselves
-            print(e)
             messages.warning(
                 self.request, 'A serious error occured. We are notified and working on it.')
             return redirect("/")

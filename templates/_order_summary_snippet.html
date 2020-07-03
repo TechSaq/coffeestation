@@ -34,16 +34,17 @@
 
                                 <td class="quantity">
                                     <div class="input-group mb-3 d-flex justify-content-center align-items-center">
-                                        <a href={% url 'shop:remove-one-from-cart' cart.item.slug %}><span class="icon-minus"></span></i></a>
-                                        <input type="text" name="quantity" class="quantity form-control input-number mx-2" value={{ cart.quantity }} min="1" max="100">
-                                        <a href={% url 'shop:add-to-cart' cart.item.slug %}><span class="icon-plus"></span></i></a>
+                                        <span data-slug={{ cart.item.slug }} class="decrease"><span class="icon-minus"></span></i></span>
+
+                                        <input type="text" name="quantity" class="quantity item-count form-control input-number mx-2" value={{ cart.quantity }} min="1" max="100">
+                                        
+                                        <span data-slug={{ cart.item.slug }} class="increase"><span class="icon-plus"></span></i></span>
                                     </div>
                                 </td>
 
                                 <td class="total">${{ cart.get_total_item_price }}</td>
                             </tr>
                         {% endfor %}
-
                         </tbody>
                     </table>
                 </div>

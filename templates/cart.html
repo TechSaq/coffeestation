@@ -7,6 +7,10 @@
     flex-grow: 0;
     width: 50px;
 }
+.decrease:hover,
+.increase:hover {
+    cursor:pointer;
+}
 </style>
 {% endblock pageSpecificCSS %}
 
@@ -58,3 +62,39 @@
 {% include 'forall/_related_products_snippet.html' %}
 
 {% endblock content %}
+
+{% block pageSpecificJS %}
+<script>
+    $('document').ready(function(){
+        const increase = document.querySelector('.increase')
+        const decrease = document.querySelector('.decrease')
+
+        const item_count = document.querySelector('.item-count')
+        
+        increase.addEventListener('click', (event)=>{
+            let slug = increase.getAttribute('data-slug')
+            let url = '/shop/add-one-to-cart/'+slug
+            fetch(url)
+                .then(response=>response.json())
+                .then(response=>{
+                    item_count.value = response.quantity
+                })
+        })
+
+        decrease.addEventListener('click', (event)=>{
+            let slug = increase.getAttribute('data-slug')
+            let url = '/shop/remove-one-from-cart/'+slug
+            let redirect_url = ''
+            fetch(url)
+                .then(response=>response.json())
+                .then(response=>{
+                    item_count.value = response.quantity
+                    if(!response.quantity) {
+                        window.location.assign("/shop/coffee-machines")
+                    }
+                })
+        })        
+    })
+
+</script>
+{% endblock %}
