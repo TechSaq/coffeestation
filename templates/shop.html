@@ -16,6 +16,9 @@
     .item-desc {
        height: 100px;
     }
+    .item-details {
+        margin-bottom: 70px;
+    }
 </style>
 {% endblock pageSpecificCSS %}
 
@@ -55,7 +58,7 @@
                                     <div class="col-lg-3 col-md-4 col-sm-6">
                                         <div class="menu-entry w-100">
                                             <a href={% url 'shop:product_single' item.slug  %} class="img" style="background-image:url({{ item.image.url }}) "></a>
-                                            <div class="text text-center pt-4">
+                                            <div class="item-details text text-center pt-4">
                                                 <h3 class="item-title"><a href={% url 'shop:product_single' item.slug  %}>{{ item.title | truncatechars:25}}</a></h3>
                                                 <p class="item-desc">{{ item.description | truncatechars:80}}</p>
                                                 <p class="price"><span>${{ item.price }}</span></p>
