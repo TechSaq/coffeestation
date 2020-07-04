@@ -33,7 +33,6 @@ class Item(models.Model):
     image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length=100)
     price = models.FloatField()
-    discount_price = models.FloatField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=3)
     slug = models.SlugField(unique=True)
     description = models.TextField()
@@ -56,7 +55,7 @@ class Item(models.Model):
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                             on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey("Item", on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     is_ordered = models.BooleanField(default=False)
 
@@ -71,7 +70,6 @@ class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
-    is_ordered = models.BooleanField(default=False)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     is_ordered = models.BooleanField(default=False)
@@ -79,12 +77,12 @@ class Order(models.Model):
                                         related_name="billing_address",
                                         on_delete=models.SET_NULL,
                                         blank=True, null=True)
-    shipping_address = models.ForeignKey(Address,
-                                        related_name="shipping_address",
-                                        on_delete=models.SET_NULL,
-                                        blank=True, null=True)
     is_delivered = models.BooleanField(default=False)
     is_received = models.BooleanField(default=False)
+    payment = models.ForeignKey("Payment",
+                                on_delete=models.SET_NULL,
+                                blank=True, null=True
+                                )
                                         
 
     def __str__(self):
